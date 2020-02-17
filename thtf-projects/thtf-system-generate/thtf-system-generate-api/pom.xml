@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>thtf-system-generate</artifactId>
+        <groupId>com.thtf</groupId>
+        <version>1.0.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>thtf-system-generate-api</artifactId>
+
+    <description>thtf-system-generate-api 代码生成接口</description>
+    <dependencies>
+        <!-- thtf-common-core -->
+        <dependency>
+            <groupId>com.thtf</groupId>
+            <artifactId>thtf-common-core</artifactId>
+        </dependency>
+        <!-- thtf-common-data -->
+        <dependency>
+            <groupId>com.thtf</groupId>
+            <artifactId>thtf-common-data</artifactId>
+        </dependency>
+        <!-- thtf-common-swagger -->
+        <dependency>
+            <groupId>com.thtf</groupId>
+            <artifactId>thtf-common-swagger</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-annotation</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+    </dependencies>
+</project>

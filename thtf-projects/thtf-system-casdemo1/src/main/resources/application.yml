@@ -1,0 +1,6 @@
+server:
+  port: 8001
+
+cas:
+  client:
+    url: http://localhost:8001

@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" th:href="@{${#themes.code('thtf.standard.css.file')}}"/>
+    <link rel="stylesheet" th:href="@{${#themes.code('thtf.standard.css.file1')}}"/>
+    <link rel="stylesheet" th:href="@{${#themes.code('thtf.standard.css.file2')}}"/>
+    <title>减灾中心统一门户</title>
+</head>
+
+<body>
+<div id="app">
+    <div class="login-box">
+        <div ref="scaleBox" style="width: 60%;">
+            <div class="logo">
+                <img th:src="@{${#themes.code('thtf.login.images.path')}+'/logo.png'}">
+                <div class="title">
+                    <img th:src="@{${#themes.code('thtf.login.images.path')}+'/login.png'}">
+                </div>
+            </div>
+            <div class="linear"></div>
+            <div class="bg1">
+
+                <div class="bg2">
+                    <div class="bg3">
+                        <form id="postForm" autocomplete="off"  method="post" th:object="${credential}">
+                            <input type="hidden" name="execution" th:value="${flowExecutionKey}"/>
+                            <input type="hidden" name="_eventId" value="submit"/>
+                            <input type="hidden" name="geolocation"/>
+                            <div class="customInput">
+                                <i class="iconfont icon-man"></i>
+                                <input class="username"
+                                       id="username"
+                                       size="25"
+                                       v-model.trim="username"
+                                       tabindex="1"
+                                       placeholder="请输入用户名"
+                                       type="text"
+                                       th:disabled="${guaEnabled}"
+                                       th:field="*{username}"
+                                       th:accesskey="#{screen.welcome.label.netid.accesskey}"
+                                       autocomplete="off"/>
+                            </div>
+                            <div class="customInput">
+                                <i class="iconfont icon-suo"></i>
+                                <input class="password"
+                                       type="password"
+                                       id="password"
+                                       v-model.trim="password"
+                                       size="25"
+                                       tabindex="2"
+                                       placeholder="请输入密码"
+                                       th:accesskey="#{screen.welcome.label.password.accesskey}"
+                                       th:field="*{password}"
+                                       autocomplete="off"/>
+                            </div>
+                            <div id="msg" th:if="${#fields.hasErrors('*')}">
+                                <span th:each="err : ${#fields.errors('*')}" th:utext="${err}"/>
+                            </div>
+                            <div class="remember">
+                                <el-checkbox label="记住密码" name="type" v-model="rememberMe" class="ctt"></el-checkbox>
+                                <a href="javascript:;" @click='centerDialogVisible = true'>忘记密码</a>
+                            </div>
+                            <button class="login-btn" @click="checkUser" name="submit" accesskey="l" th:value="#{screen.welcome.button.login}" type="submit">登录</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <el-dialog title="重置密码" :visible.sync="centerDialogVisible" @close="handleClose" width="676px" center>
+            <div class="repwd">
+                <div class="updateUname">登录名:<input v-model='updateUname' type="text"></div>
+                <button class="subpwd" @click='postPwd'>初始化密码</button>
+                <span v-if='sendstatus'>已给管理员发送初始化密码消息,请电话联系62492531.</span>
+            </div>
+        </el-dialog>
+    </div>
+</div>
+</body>
+<script th:src="@{${#themes.code('thtf.javascript.file1')}}"></script>
+<script th:src="@{${#themes.code('thtf.javascript.file')}}"></script>
+<script th:src="@{${#themes.code('thtf.javascript.file2')}}"></script>
+<script>
+    var base = new Base64();
+    new Vue({
+        el: '#app',
+        data: function () {
+            return {
+                scale: 1,
+                rememberMe: false,
+                username: "",
+                password: "",
+                updateUname: '',
+                status: false,
+                sendstatus: false,
+                centerDialogVisible: false
+            }
+        },
+        mounted:function() {
+            if(!!$('#msg span').text()){
+                if(this.getCookie('user')){
+                    this.setCookie('user', '')
+                    this.setCookie('pwd', '')
+                }
+
+            }else{
+                if (this.getCookie('user')) {
+                    this.username = this.getCookie('user')
+                    this.password = base.decode(this.getCookie('pwd'))
+                    this.rememberMe = true
+                }
+            }
+
+        },
+
+        methods: {
+            initPageSize:function() {
+                this.scale = window.innerWidth < 1200 ? 1200 / 1920 : window.innerWidth / 1920
+                this.$refs.scaleBox.style.transform = 'scale(' + this.scale + ')'
+            },
+            checkUser: function () {
+                if (this.rememberMe) {
+                    this.setCookie('user', this.username)
+                    this.setCookie('pwd', base.encode(this.password))
+                }else {
+                    this.setCookie('user', '')
+                    this.setCookie('pwd', '')
+                }
+            },
+            setCookie: function (name, value) {
+                console.log(name, value)
+                var Days = 9;
+                var exp = new Date();
+                exp.setTime(exp.getTime() + Days * 24 * 60 * 60 * 1000);
+                document.cookie = name + "=" + escape(value) + ";expires=" + exp.toGMTString();
+            },
+            getCookie: function (name) {
+                var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
+                if (arr = document.cookie.match(reg))
+                    return unescape(arr[2]);
+                else
+                    return null;
+            },
+            handleClose: function () {
+                this.updateUname = ''
+                this.sendstatus = false
+            },
+            postPwd:function(){
+                var ip = "[[${#themes.code('thtf.gatewayip')}]]";
+                var url = ip + "/ocean/message/create";
+                var _this = this;
+                $.ajax({
+                    type : "post",    //请求类型
+                    url : url,//请求的 URL地址
+                    data:{username:this.updateUname},
+                    success: function (data) {
+                        if(data.code == 200){
+                            _this.sendstatus=true
+                        }else{
+                            alert(data.message)
+                        }
+                    },
+                    error:function (data) {
+                        alert(data.result);
+                    }
+                });
+            }
+        }
+    })
+
+    function Base64() {
+
+        // private property
+        _keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+
+        // public method for encoding
+        this.encode = function (input) {
+            var output = "";
+            var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
+            var i = 0;
+            input = _utf8_encode(input);
+            while (i < input.length) {
+                chr1 = input.charCodeAt(i++);
+                chr2 = input.charCodeAt(i++);
+                chr3 = input.charCodeAt(i++);
+                enc1 = chr1 >> 2;
+                enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+                enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+                enc4 = chr3 & 63;
+                if (isNaN(chr2)) {
+                    enc3 = enc4 = 64;
+                } else if (isNaN(chr3)) {
+                    enc4 = 64;
+                }
+                output = output +
+                    _keyStr.charAt(enc1) + _keyStr.charAt(enc2) +
+                    _keyStr.charAt(enc3) + _keyStr.charAt(enc4);
+            }
+            return output;
+        }
+
+        // public method for decoding
+        this.decode = function (input) {
+            var output = "";
+            var chr1, chr2, chr3;
+            var enc1, enc2, enc3, enc4;
+            var i = 0;
+            input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+            while (i < input.length) {
+                enc1 = _keyStr.indexOf(input.charAt(i++));
+                enc2 = _keyStr.indexOf(input.charAt(i++));
+                enc3 = _keyStr.indexOf(input.charAt(i++));
+                enc4 = _keyStr.indexOf(input.charAt(i++));
+                chr1 = (enc1 << 2) | (enc2 >> 4);
+                chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
+                chr3 = ((enc3 & 3) << 6) | enc4;
+                output = output + String.fromCharCode(chr1);
+                if (enc3 != 64) {
+                    output = output + String.fromCharCode(chr2);
+                }
+                if (enc4 != 64) {
+                    output = output + String.fromCharCode(chr3);
+                }
+            }
+            output = _utf8_decode(output);
+            return output;
+        }
+
+        // private method for UTF-8 encoding
+        _utf8_encode = function (string) {
+            string = string.replace(/\r\n/g,"\n");
+            var utftext = "";
+            for (var n = 0; n < string.length; n++) {
+                var c = string.charCodeAt(n);
+                if (c < 128) {
+                    utftext += String.fromCharCode(c);
+                } else if((c > 127) && (c < 2048)) {
+                    utftext += String.fromCharCode((c >> 6) | 192);
+                    utftext += String.fromCharCode((c & 63) | 128);
+                } else {
+                    utftext += String.fromCharCode((c >> 12) | 224);
+                    utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+                    utftext += String.fromCharCode((c & 63) | 128);
+                }
+
+            }
+            return utftext;
+        }
+
+        // private method for UTF-8 decoding
+        _utf8_decode = function (utftext) {
+            var string = "";
+            var i = 0;
+            var c = c1 = c2 = 0;
+            while ( i < utftext.length ) {
+                c = utftext.charCodeAt(i);
+                if (c < 128) {
+                    string += String.fromCharCode(c);
+                    i++;
+                } else if((c > 191) && (c < 224)) {
+                    c2 = utftext.charCodeAt(i+1);
+                    string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
+                    i += 2;
+                } else {
+                    c2 = utftext.charCodeAt(i+1);
+                    c3 = utftext.charCodeAt(i+2);
+                    string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
+                    i += 3;
+                }
+            }
+            return string;
+        }
+    }
+</script>
+
+</html>

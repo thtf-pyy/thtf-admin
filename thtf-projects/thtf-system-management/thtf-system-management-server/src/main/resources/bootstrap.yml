@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: thtf-system-management
+  cloud:
+    nacos:
+      config:
+        server-addr: 10.10.50.140:8848
+        namespace: 09544853-8f04-44b8-a5eb-1b6e89c2f8ca
+        group: dev
+        file-extension: yml
