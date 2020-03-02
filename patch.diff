@@ -1,0 +1,27 @@
+From e66603dd9857fd002ea5fa24b17e479bdc83a17b Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?=E6=BD=98=E9=98=B3=E6=B4=8B?= <panyangyang@thtf.com.cn>
+Date: Mon, 2 Mar 2020 19:02:03 +0800
+Subject: [PATCH] =?UTF-8?q?=E4=BF=AE=E6=94=B9dev2?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ README.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/README.md b/README.md
+index 382e41a..c8faa8d 100644
+--- a/README.md
++++ b/README.md
+@@ -27,6 +27,7 @@ thtf-admin模板工程
+ 4.  新建 Pull Request
+ 
+ dev 分支修改
++dev 修改2
+ 
+ 
+ 
+-- 
+2.22.0.windows.1
+
