@@ -26,10 +26,6 @@ thtf-admin模板工程
 3.  提交代码
 4.  新建 Pull Request
 
-dev 分支修改
-dev 修改2
-dev 修改3
-dev 修改4
-dev 修改5
-dev 修改6
+dev1
+dev2
 
