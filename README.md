@@ -1,4 +1,4 @@
-# thtf-admin 模板工程
+# thtf-admin
 
 #### 介绍
 thtf-admin模板工程
