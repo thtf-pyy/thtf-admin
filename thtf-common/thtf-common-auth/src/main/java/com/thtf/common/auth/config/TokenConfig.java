@@ -18,7 +18,7 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
  */
 @Configuration
 public class TokenConfig {
-    private String SIGNING_KEY = "thtf";
+    private String SIGNING_KEY = "thtf_sign_key";
 
     @Bean
     public TokenStore tokenStore() {
